@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    
+</head>
+<body>
+    <div class="top-stripe">
+        <div class="container">
+            <div class="logo-container">
+                <img class="logo" src="/images/logo.png" alt="Logo">
+                <h1 class="site-title">FHC - Memberships</h1>
+            </div>
+            <div class="navigation-links">
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/Admin">Admin - Portal</a></li>
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="/Login.html">Login</a></li>
+                <!-- Add more menu buttons as needed -->
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2 class="dashboard-heading">Welcome to the Admin Dashboard</h2>
+
+        <!-- Navigation Links -->
+        <div class="navigation-links">
+            <a href="/admin">Membership Applications</a>
+            <!-- Add more navigation links as needed -->
+        </div>
+
+        <!-- Statistics Section -->
+        <div class="statistics-section">
+            <h3>Statistics</h3>
+            <ul>
+                <li>Total Active Members: <span id="totalActiveMembers">0</span></li>
+                <li>Applications Needing Review: <span id="applicationsNeedingReview">0</span></li>
+                <!-- Add more statistics as needed -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Function to fetch statistics from the server
+        async function fetchStatistics() {
+            try {
+                const response = await fetch('/statistics');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch statistics');
+                }
+                const data = await response.json();
+                displayStatistics(data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Function to display statistics on the page
+        function displayStatistics(data) {
+            const totalActiveMembersElement = document.getElementById('totalActiveMembers');
+            const applicationsNeedingReviewElement = document.getElementById('applicationsNeedingReview');
+
+            totalActiveMembersElement.textContent = data.totalActiveMembers;
+            applicationsNeedingReviewElement.textContent = data.applicationsNeedingReview;
+            // Update other statistics elements as needed
+        }
+
+        // Fetch statistics when the page loads
+        window.addEventListener('load', fetchStatistics);
+    </script>
+</body>
+</html>

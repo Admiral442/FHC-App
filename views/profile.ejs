@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - StudyConnect</title>
+    <link rel="stylesheet" href="/styles.css"> <!-- Assuming styles.css is in the public folder -->
+
+    <style>
+        /* Add any custom styles here */
+    </style>
+</head>
+<body>
+    <header>
+        <h1>StudyConnect</h1>
+        <nav>
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li><a href="ladder.html">NRL - Ladder</a></li>
+                <li><a href="media.html" id="photos">Media</a></li>
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="#" id="logout">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <h2 class="user-profile">Profile</h2>
+        <div class="profile-info" id="profile-info">
+            <!-- Display user information -->
+            <p>Username: <%= userData.username %></p>
+            <p>Email: <%= userData.email %></p>
+            <p>Role: <%= userData.role %></p>
+        </div>
+    </div>
+
+    <!-- Any additional scripts can be added here -->
+    <script>
+        // Add any JavaScript code here if needed
+    </script>
+</body>
+</html>
