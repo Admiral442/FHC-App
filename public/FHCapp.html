@@ -1,0 +1,76 @@
+<!-- Application Form Page -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membership Application Form</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>FHC Membership Application Form</h2>
+        <form id="applicationForm">
+            <label for="fullName">Full Name:</label>
+            <input type="text" id="fullName" name="fullName" required><br><br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br><br>
+            <label for="phone">Phone Number:</label>
+            <input type="tel" id="phone" name="phone" required><br><br>
+            <label for="emergencyContact">Emergency Contact:</label>
+            <input type="text" id="emergencyContact" name="emergencyContact" required><br><br>
+            <label for="membershipFee">Annual Membership Fee:</label><br>
+            <input type="radio" id="individualFee" name="membershipFee" value="Individual $10" required>
+            <label for="individualFee">Individual $10</label><br>
+            <input type="radio" id="familyFee" name="membershipFee" value="Family $20">
+            <label for="familyFee">Family $20</label><br><br>
+            <button type="submit">Submit Application</button>
+        </form>
+    </div>
+
+    <script>
+        // Function to handle application form submission
+        document.getElementById('applicationForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            // Retrieve form data
+            let fullName = document.getElementById('fullName').value;
+            let email = document.getElementById('email').value;
+            let phone = document.getElementById('phone').value;
+            let emergencyContact = document.getElementById('emergencyContact').value;
+            let membershipFee = document.querySelector('input[name="membershipFee"]:checked').value;
+
+            // Construct the data object to send to the server
+            let formData = {
+                fullName: fullName,
+                email: email,
+                phone: phone,
+                emergencyContact: emergencyContact,
+                membershipFee: membershipFee
+            };
+
+            // Send the form data to the server
+            fetch('/submit-application', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Application submitted successfully!');
+                    // Optionally, reset the form
+                    document.getElementById('applicationForm').reset();
+                } else {
+                    alert('Failed to submit application. Please try again later.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again later.');
+            });
+        });
+    </script>
+</body>
+</html>
