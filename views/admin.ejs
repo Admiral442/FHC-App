@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="top-stripe">
+        <div class="container">
+            <div class="logo-container">
+                <img class="logo" src="/images/logo.png" alt="Logo">
+                <h1 class="site-title">FHC - Memberships</h1>
+            </div>
+            <div class="navigation-links">
+                <li><a href="/dashboard">Dashboard</a></li>
+                <li><a href="/Admin">Admin - Portal</a></li>
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="/Login.html">Login</a></li>
+                <!-- Add more menu buttons as needed -->
+            </div>
+        </div>
+    </div>
+
+    <div class="container" id="adminContainer">
+        <% if (loggedIn) { %> <!-- Display content only if loggedIn is true -->
+        <h2>Membership Applications</h2>
+        <div id="applicationsContainer"></div>
+        <% } else { %>
+        <h2>You are not logged in.</h2>
+        <% } %>
+    </div>
+
+    <script>
+        // Set loggedIn variable from server-side
+        const loggedIn = <%= JSON.stringify(loggedIn) %>;
+
+        // Function to fetch membership applications from the server
+        async function fetchApplications() {
+            try {
+                const response = await fetch('/get-applications');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch applications');
+                }
+                const applications = await response.json();
+                displayApplications(applications);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+        
+        // Function to display membership applications as cards
+        function displayApplications(applications) {
+            const container = document.getElementById('applicationsContainer');
+            container.innerHTML = ''; // Clear previous content
+            applications.forEach(application => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+
+                const fullName = document.createElement('p');
+                fullName.textContent = 'Full Name: ' + application.full_name;
+                card.appendChild(fullName);
+
+                const email = document.createElement('p');
+                email.textContent = 'Email: ' + application.email;
+                card.appendChild(email);
+
+                const phone = document.createElement('p');
+                phone.textContent = 'Phone: ' + application.phone;
+                card.appendChild(phone);
+
+                const emergencyContact = document.createElement('p');
+                emergencyContact.textContent = 'Emergency Contact: ' + application.emergency_contact;
+                card.appendChild(emergencyContact);
+
+                const approveButton = document.createElement('button');
+                approveButton.textContent = 'Approve';
+                approveButton.addEventListener('click', () => approveApplication(application.id));
+                card.appendChild(approveButton);
+
+                const denyButton = document.createElement('button');
+                denyButton.textContent = 'Deny';
+                denyButton.addEventListener('click', () => denyApplication(application.id));
+                card.appendChild(denyButton);
+
+                container.appendChild(card);
+            });
+        }
+
+        // Function to approve a membership application
+        async function approveApplication(applicationId) {
+            try {
+                const response = await fetch(`/approve-application/${applicationId}`, { method: 'POST' });
+                if (!response.ok) {
+                    throw new Error('Failed to approve application');
+                }
+                // Refresh applications after approval
+                fetchApplications();
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Function to deny a membership application
+        async function denyApplication(applicationId) {
+            try {
+                const response = await fetch(`/deny-application/${applicationId}`, { method: 'POST' });
+                if (!response.ok) {
+                    throw new Error('Failed to deny application');
+                }
+                // Refresh applications after denial
+                fetchApplications();
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Fetch applications when the page loads, only if logged in
+        window.addEventListener('load', () => {
+            if (loggedIn) {
+                fetchApplications();
+            }
+            console.log('Logged in:', loggedIn); // Assuming loggedIn variable is set on the server-side
+        });
+    </script>
+</body>
+</html>
